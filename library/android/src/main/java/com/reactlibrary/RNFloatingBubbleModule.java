@@ -17,6 +17,9 @@ import android.view.View;
 import android.content.Intent;
 import android.provider.Settings;
 import android.net.Uri;
+import android.util.Log;
+
+import android.widget.TextView;
 
 import com.txusballesteros.bubbles.BubbleLayout;
 import com.txusballesteros.bubbles.BubblesManager;
@@ -47,7 +50,7 @@ public class RNFloatingBubbleModule extends ReactContextBaseJavaModule {
   @ReactMethod // Notates a method that should be exposed to React
   public void showFloatingBubble(int x, int y, final Promise promise) {
     try {
-      this.addNewBubble(x, y);
+      this.addNewBubble(150, 150);
       promise.resolve("");
     } catch (Exception e) {
       promise.reject("");
@@ -105,6 +108,8 @@ public class RNFloatingBubbleModule extends ReactContextBaseJavaModule {
 
       @Override
       public void onBubbleClick(BubbleLayout bubble) {
+        TextView tvLabel = bubbleView.findViewById(R.id.textView2);
+        tvLabel.setText("HELLO");
         sendEvent("floating-bubble-press");
       }
     });
@@ -148,7 +153,7 @@ public class RNFloatingBubbleModule extends ReactContextBaseJavaModule {
         .setInitializationCallback(new OnInitializedCallback() {
           @Override
           public void onInitialized() {
-            // addNewBubble();
+            // addNewBubble(80,80);
           }
         }).build();
     bubblesManager.initialize();
