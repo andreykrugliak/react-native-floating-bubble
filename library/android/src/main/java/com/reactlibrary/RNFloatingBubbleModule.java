@@ -30,6 +30,7 @@ public class RNFloatingBubbleModule extends ReactContextBaseJavaModule {
   private BubblesManager bubblesManager;
   private final ReactApplicationContext reactContext;
   private BubbleLayout bubbleView;
+  private BubbleLayout expandedView;
 
   public RNFloatingBubbleModule(ReactApplicationContext reactContext) {
     super(reactContext);
@@ -50,7 +51,7 @@ public class RNFloatingBubbleModule extends ReactContextBaseJavaModule {
   @ReactMethod // Notates a method that should be exposed to React
   public void showFloatingBubble(int x, int y, final Promise promise) {
     try {
-      this.addNewBubble(150, 150);
+      this.addNewBubble("USD/EUR");
       promise.resolve("");
     } catch (Exception e) {
       promise.reject("");
@@ -94,13 +95,20 @@ public class RNFloatingBubbleModule extends ReactContextBaseJavaModule {
     }
   }  
 
-  private void addNewBubble(int x, int y) {
+  private void addNewBubble(String title) {
     this.removeBubble();
     bubbleView = (BubbleLayout) LayoutInflater.from(reactContext).inflate(R.layout.bubble_layout, null);
+//   final View container = bubbleView.findViewById(R.id.container);
+//    final View expandedView = bubbleView.findViewById(R.id.expanded_container);
+//   final TextView tvLabel = container.findViewById(R.id.textView1);
+//   final TextView lsLabel = expandedView.findViewById(R.id.textView2);
+//   tvLabel.setText(title);
+//    lsLabel.setText(title);
     bubbleView.setOnBubbleRemoveListener(new BubbleLayout.OnBubbleRemoveListener() {
       @Override
       public void onBubbleRemoved(BubbleLayout bubble) {
         bubbleView = null;
+
         sendEvent("floating-bubble-remove");
       }
     });
@@ -108,13 +116,18 @@ public class RNFloatingBubbleModule extends ReactContextBaseJavaModule {
 
       @Override
       public void onBubbleClick(BubbleLayout bubble) {
-        TextView tvLabel = bubbleView.findViewById(R.id.textView2);
-        tvLabel.setText("HELLO");
+
+        if (expandedView.getVisibility() == View.GONE) {
+          expandedView.setVisibility(View.VISIBLE);
+        } else {
+          expandedView.setVisibility(View.GONE);
+        }
+       
         sendEvent("floating-bubble-press");
       }
     });
     bubbleView.setShouldStickToWall(true);
-    bubblesManager.addBubble(bubbleView, x, y);
+    bubblesManager.addBubble(bubbleView, 50, 50);
   }
 
   private boolean hasPermission(){
