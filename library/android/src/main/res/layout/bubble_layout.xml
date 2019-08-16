@@ -7,34 +7,20 @@
     android:layout_height="match_parent">
 
     <com.getbase.floatingactionbutton.FloatingActionsMenu
-        android:id="@+id/right_labels"
+        android:id="@+id/multiple_actions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        fab:fab_addButtonColorNormal="@color/white"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        fab:fab_addButtonColorNormal="#FFFFFF"
         fab:fab_addButtonColorPressed="@color/white_pressed"
         fab:fab_addButtonPlusIconColor="@color/half_black"
-        fab:fab_addButtonSize="mini"
-        fab:fab_labelStyle="@style/menu_labels_style"
-        fab:fab_labelsPosition="right">
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            fab:fab_colorNormal="@color/white"
-            fab:fab_title="Label on the right"
-            fab:fab_colorPressed="@color/white_pressed"/>
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            fab:fab_colorNormal="@color/white"
-            fab:fab_size="mini"
-            fab:fab_title="Another one on the right"
-            fab:fab_colorPressed="@color/white_pressed"/>
+        fab:fab_labelStyle="@style/menu_labels_style">
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
 </com.txusballesteros.bubbles.BubbleLayout>

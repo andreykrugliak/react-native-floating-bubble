@@ -9,6 +9,8 @@ import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.ReadableMap;
 
 import android.os.Bundle;
 import android.os.Build;
@@ -17,13 +19,17 @@ import android.view.View;
 import android.content.Intent;
 import android.provider.Settings;
 import android.net.Uri;
+import android.content.ClipboardManager;
+import android.content.ClipData;
 import android.util.Log;
-
-import android.widget.TextView;
 
 import com.txusballesteros.bubbles.BubbleLayout;
 import com.txusballesteros.bubbles.BubblesManager;
 import com.txusballesteros.bubbles.OnInitializedCallback;
+
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
+
 
 public class RNFloatingBubbleModule extends ReactContextBaseJavaModule {
 
@@ -43,15 +49,20 @@ public class RNFloatingBubbleModule extends ReactContextBaseJavaModule {
     // }
   }
 
+  public class ButtonData {
+    public String title;
+    public String value;
+  }
+
   @Override
   public String getName() {
     return "RNFloatingBubble";
   }
 
   @ReactMethod // Notates a method that should be exposed to React
-  public void showFloatingBubble(int x, int y, final Promise promise) {
+  public void showFloatingBubble(ReadableArray data, final Promise promise) {
     try {
-      this.addNewBubble("USD/EUR");
+      this.addNewBubble(data);
       promise.resolve("");
     } catch (Exception e) {
       promise.reject("");
@@ -93,17 +104,38 @@ public class RNFloatingBubbleModule extends ReactContextBaseJavaModule {
     } catch (Exception e) {
       promise.reject("");
     }
-  }  
+  }
 
-  private void addNewBubble(String title) {
+  private void setClipboard(String text) {
+    ClipData clipdata = ClipData.newPlainText(null, text);
+    ClipboardManager clipboard = getClipboardService();
+    clipboard.setPrimaryClip(clipdata);
+  }
+
+  private ClipboardManager getClipboardService() {
+    return (ClipboardManager) reactContext.getSystemService(reactContext.CLIPBOARD_SERVICE);
+  }
+
+  private void addNewBubble(ReadableArray data) {
     this.removeBubble();
     bubbleView = (BubbleLayout) LayoutInflater.from(reactContext).inflate(R.layout.bubble_layout, null);
-//   final View container = bubbleView.findViewById(R.id.container);
-//    final View expandedView = bubbleView.findViewById(R.id.expanded_container);
-//   final TextView tvLabel = container.findViewById(R.id.textView1);
-//   final TextView lsLabel = expandedView.findViewById(R.id.textView2);
-//   tvLabel.setText(title);
-//    lsLabel.setText(title);
+    final FloatingActionsMenu button = bubbleView.findViewById(R.id.multiple_actions);
+    for (int i = 0; i <  data.size(); i++) {
+      FloatingActionButton action = new FloatingActionButton(reactContext);
+      final ReadableMap item = data.getMap(i);
+      final String title = item.getString("title");
+      final String value = item.getString("value");
+      action.setOnClickListener(new View.OnClickListener() {
+        public void onClick(View v) {
+          setClipboard(item.getString("value"));
+        }
+      });
+      action.setIcon(R.drawable.copy_icon);
+      action.setTitle(title + ": " + value);
+      action.setStrokeVisible(false);
+      button.addButton(action);
+
+    }
     bubbleView.setOnBubbleRemoveListener(new BubbleLayout.OnBubbleRemoveListener() {
       @Override
       public void onBubbleRemoved(BubbleLayout bubble) {
@@ -117,12 +149,6 @@ public class RNFloatingBubbleModule extends ReactContextBaseJavaModule {
       @Override
       public void onBubbleClick(BubbleLayout bubble) {
 
-        if (expandedView.getVisibility() == View.GONE) {
-          expandedView.setVisibility(View.VISIBLE);
-        } else {
-          expandedView.setVisibility(View.GONE);
-        }
-       
         sendEvent("floating-bubble-press");
       }
     });
@@ -155,6 +181,7 @@ public class RNFloatingBubbleModule extends ReactContextBaseJavaModule {
       reactContext.startActivityForResult(intent, 0, bundle);
     } 
     if (hasPermission()) {
+      this.initializeBubblesManager();
       promise.resolve("");
     } else {
       promise.reject("");
