@@ -16,12 +16,16 @@ import android.os.Bundle;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
 import android.content.Intent;
 import android.provider.Settings;
 import android.net.Uri;
 import android.content.ClipboardManager;
 import android.content.ClipData;
 import android.util.Log;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import com.txusballesteros.bubbles.BubbleLayout;
 import com.txusballesteros.bubbles.BubblesManager;
@@ -36,7 +40,6 @@ public class RNFloatingBubbleModule extends ReactContextBaseJavaModule {
   private BubblesManager bubblesManager;
   private final ReactApplicationContext reactContext;
   private BubbleLayout bubbleView;
-  private BubbleLayout expandedView;
 
   public RNFloatingBubbleModule(ReactApplicationContext reactContext) {
     super(reactContext);
@@ -49,20 +52,15 @@ public class RNFloatingBubbleModule extends ReactContextBaseJavaModule {
     // }
   }
 
-  public class ButtonData {
-    public String title;
-    public String value;
-  }
-
   @Override
   public String getName() {
     return "RNFloatingBubble";
   }
 
   @ReactMethod // Notates a method that should be exposed to React
-  public void showFloatingBubble(ReadableArray data, final Promise promise) {
+  public void showFloatingBubble(String title, ReadableArray data, final Promise promise) {
     try {
-      this.addNewBubble(data);
+      this.addNewBubble(title, data);
       promise.resolve("");
     } catch (Exception e) {
       promise.reject("");
@@ -116,12 +114,14 @@ public class RNFloatingBubbleModule extends ReactContextBaseJavaModule {
     return (ClipboardManager) reactContext.getSystemService(reactContext.CLIPBOARD_SERVICE);
   }
 
-  private void addNewBubble(ReadableArray data) {
+  private void addNewBubble(String mainTitle, ReadableArray data) {
     this.removeBubble();
     bubbleView = (BubbleLayout) LayoutInflater.from(reactContext).inflate(R.layout.bubble_layout, null);
     final FloatingActionsMenu button = bubbleView.findViewById(R.id.multiple_actions);
+
+
     for (int i = 0; i <  data.size(); i++) {
-      FloatingActionButton action = new FloatingActionButton(reactContext);
+      final FloatingActionButton action = new FloatingActionButton(reactContext);
       final ReadableMap item = data.getMap(i);
       final String title = item.getString("title");
       final String value = item.getString("value");
@@ -132,10 +132,12 @@ public class RNFloatingBubbleModule extends ReactContextBaseJavaModule {
       });
       action.setIcon(R.drawable.copy_icon);
       action.setTitle(title + ": " + value);
-      action.setStrokeVisible(false);
+      action.setVisibility(View.GONE);
+
       button.addButton(action);
 
     }
+
     bubbleView.setOnBubbleRemoveListener(new BubbleLayout.OnBubbleRemoveListener() {
       @Override
       public void onBubbleRemoved(BubbleLayout bubble) {
@@ -148,12 +150,41 @@ public class RNFloatingBubbleModule extends ReactContextBaseJavaModule {
 
       @Override
       public void onBubbleClick(BubbleLayout bubble) {
-
+        button.toggle();
         sendEvent("floating-bubble-press");
       }
     });
     bubbleView.setShouldStickToWall(true);
     bubblesManager.addBubble(bubbleView, 50, 50);
+
+    button.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
+      @Override
+      public void onMenuExpanded() {
+        final int childCount = button.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+          View v = button.getChildAt(i);
+          v.setVisibility(View.VISIBLE);
+        }
+      }
+
+      @Override
+      public void onMenuCollapsed() {
+        final int childCount = button.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+          View v = button.getChildAt(i);
+          String id = getId(v);
+          if(id == "no-id"){
+            v.setVisibility(View.GONE);
+          }
+        }
+
+      }
+    });
+  }
+
+  public static String getId(View view) {
+    if (view.getId() == View.NO_ID) return "no-id";
+    else return view.getResources().getResourceName(view.getId());
   }
 
   private boolean hasPermission(){
@@ -189,7 +220,7 @@ public class RNFloatingBubbleModule extends ReactContextBaseJavaModule {
   }
 
   private void initializeBubblesManager() {
-    bubblesManager = new BubblesManager.Builder(reactContext).setTrashLayout(R.layout.bubble_trash_layout)
+    bubblesManager = new BubblesManager.Builder(reactContext)
         .setInitializationCallback(new OnInitializedCallback() {
           @Override
           public void onInitialized() {
