@@ -138,6 +138,23 @@ public class RNFloatingBubbleModule extends ReactContextBaseJavaModule {
 
     }
 
+    final FloatingActionButton action = new FloatingActionButton(reactContext);
+    action.setOnClickListener(new View.OnClickListener() {
+      public void onClick(View v) {
+        if(bubbleView != null){
+          try{
+            bubblesManager.removeBubble(bubbleView);
+          } catch(Exception e){
+
+          }
+        }
+      }
+    });
+    action.setTitle(mainTitle);
+    action.setIcon(R.drawable.baseline_close_white_24);
+    action.setVisibility(View.GONE);
+    button.addButton(action);
+
     bubbleView.setOnBubbleRemoveListener(new BubbleLayout.OnBubbleRemoveListener() {
       @Override
       public void onBubbleRemoved(BubbleLayout bubble) {
@@ -150,36 +167,20 @@ public class RNFloatingBubbleModule extends ReactContextBaseJavaModule {
 
       @Override
       public void onBubbleClick(BubbleLayout bubble) {
+        final int childCount = button.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+          View v = button.getChildAt(i);
+          String id = getId(v);
+          if(id == "no-id"){
+            v.setVisibility(!button.isExpanded() ? View.VISIBLE : View.GONE);
+          }
+        }
         button.toggle();
         sendEvent("floating-bubble-press");
       }
     });
     bubbleView.setShouldStickToWall(true);
     bubblesManager.addBubble(bubbleView, 50, 50);
-
-    button.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
-      @Override
-      public void onMenuExpanded() {
-        final int childCount = button.getChildCount();
-        for (int i = 0; i < childCount; i++) {
-          View v = button.getChildAt(i);
-          v.setVisibility(View.VISIBLE);
-        }
-      }
-
-      @Override
-      public void onMenuCollapsed() {
-        final int childCount = button.getChildCount();
-        for (int i = 0; i < childCount; i++) {
-          View v = button.getChildAt(i);
-          String id = getId(v);
-          if(id == "no-id"){
-            v.setVisibility(View.GONE);
-          }
-        }
-
-      }
-    });
   }
 
   public static String getId(View view) {
@@ -194,7 +195,7 @@ public class RNFloatingBubbleModule extends ReactContextBaseJavaModule {
     return true;
   }
 
-  private void removeBubble() {
+  public void removeBubble() {
     if(bubbleView != null){
       try{
         bubblesManager.removeBubble(bubbleView);
