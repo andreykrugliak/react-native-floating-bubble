@@ -120,9 +120,8 @@ public class RNFloatingBubbleModule extends ReactContextBaseJavaModule {
       final ReadableMap item = data.getMap(i);
       final String title = item.getString("title");
       final String value = item.getString("value");
-      final String color = item.getString("color");
-      if(color != null){
-        final int colorHEX = Color.parseColor(color);
+      if(item.hasKey("color")){
+        final int colorHEX = Color.parseColor(item.getString("color"));
         action.setColorNormal(colorHEX);
       }
       action.setOnClickListener(new View.OnClickListener() {
