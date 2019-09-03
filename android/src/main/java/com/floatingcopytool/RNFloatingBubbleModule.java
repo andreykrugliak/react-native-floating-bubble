@@ -53,7 +53,7 @@ public class RNFloatingBubbleModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod // Notates a method that should be exposed to React
-  public void showFloatingBubble(String title, ReadableArray data, final Promise promise) {
+  public void showFloatingBubble(ReadableMap title, ReadableArray data, final Promise promise) {
     try {
       this.addNewBubble(title, data);
       promise.resolve("");
@@ -109,7 +109,7 @@ public class RNFloatingBubbleModule extends ReactContextBaseJavaModule {
     return (ClipboardManager) reactContext.getSystemService(reactContext.CLIPBOARD_SERVICE);
   }
 
-  private void addNewBubble(String mainTitle, ReadableArray data) {
+  private void addNewBubble(ReadableMap titleData, ReadableArray data) {
     this.removeBubble();
     bubbleView = (BubbleLayout) LayoutInflater.from(reactContext).inflate(R.layout.bubble_layout, null);
     final FloatingActionsMenu button = bubbleView.findViewById(R.id.multiple_actions);
@@ -149,6 +149,11 @@ public class RNFloatingBubbleModule extends ReactContextBaseJavaModule {
         }
       }
     });
+    final String mainTitle = titleData.getString("title");
+    if(titleData.hasKey("color")){
+      final int colorHEX = Color.parseColor(titleData.getString("color"));
+      action.setColorNormal(colorHEX);
+    }
     action.setTitle(mainTitle);
     action.setIcon(R.drawable.baseline_close_white_24);
     action.setVisibility(View.GONE);
