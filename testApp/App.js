@@ -30,10 +30,23 @@ import {
 const showToast = text => ToastAndroid.show(text, 1000);
 
 const App = () => {
-	const onAdd = (title, customData) =>
+	const onAdd = () => {
+		const title = 'USD/EUR';
+		const customData = [
+			{
+				title: 'Current price',
+				value: '1.3'
+			},
+			{
+				title: 'SL Hit',
+				value: '1.354'
+			}
+		];
 		showFloatingBubble(title, customData).then(() =>
 			showToast('Add Floating Button')
 		);
+	};
+
 	const onHide = () =>
 		hideFloatingBubble()
 			.then(() => showToast('Manually Removed Bubble'))
