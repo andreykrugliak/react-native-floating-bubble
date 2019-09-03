@@ -40,6 +40,6 @@ repositories {
 dependencies {
     implementation 'com.facebook.react:react-native:+'
     implementation 'com.github.andreykrugliak:android-floating-action-button:7392585a32'
-    implementation 'com.github.andreykrugliak:bubbles-for-android:6172e85a7d'
+    implementation 'com.github.LazarRistic:bubbles-for-android:1.2.4'
 }
   
