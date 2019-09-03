@@ -12,9 +12,9 @@ declare module 'react-native-floating-bubble' {
 	export function showFloatingBubble(
 		titleData: title,
 		data: buttonItem[]
-	): void;
-	export function hideFloatingBubble(): void;
-	export function checkPermission(): void;
-	export function requestPermission(): void;
-	export function initialize(): void;
+	): Promise<string>;
+	export function hideFloatingBubble(): Promise<string>;
+	export function checkPermission(): Promise<boolean | string>;
+	export function requestPermission(): Promise<Promise>;
+	export function initialize(): Promise<string>;
 }
