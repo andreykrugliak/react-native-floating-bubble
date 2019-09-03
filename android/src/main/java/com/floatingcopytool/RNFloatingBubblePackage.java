@@ -1,5 +1,5 @@
 
-package com.reactlibrary;
+package com.floatingcopytool;
 
 import java.util.Arrays;
 import java.util.Collections;

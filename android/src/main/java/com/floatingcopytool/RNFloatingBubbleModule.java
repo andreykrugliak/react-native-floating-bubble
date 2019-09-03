@@ -1,10 +1,9 @@
 
-package com.reactlibrary;
+package com.floatingcopytool;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableMap;
@@ -16,16 +15,11 @@ import android.os.Bundle;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnTouchListener;
-import android.view.ViewGroup;
 import android.content.Intent;
 import android.provider.Settings;
 import android.net.Uri;
 import android.content.ClipboardManager;
 import android.content.ClipData;
-import android.util.Log;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import com.txusballesteros.bubbles.BubbleLayout;
 import com.txusballesteros.bubbles.BubblesManager;
