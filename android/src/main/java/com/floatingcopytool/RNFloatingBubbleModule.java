@@ -20,6 +20,7 @@ import android.provider.Settings;
 import android.net.Uri;
 import android.content.ClipboardManager;
 import android.content.ClipData;
+import android.graphics.Color;
 
 import com.txusballesteros.bubbles.BubbleLayout;
 import com.txusballesteros.bubbles.BubblesManager;
@@ -119,6 +120,11 @@ public class RNFloatingBubbleModule extends ReactContextBaseJavaModule {
       final ReadableMap item = data.getMap(i);
       final String title = item.getString("title");
       final String value = item.getString("value");
+      final String color = item.getString("color");
+      if(color != null){
+        final int colorHEX = Color.parseColor(color);
+        action.setColorNormal(colorHEX);
+      }
       action.setOnClickListener(new View.OnClickListener() {
         public void onClick(View v) {
           setClipboard(item.getString("value"));
