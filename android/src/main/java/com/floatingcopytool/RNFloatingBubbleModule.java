@@ -134,6 +134,7 @@ public class RNFloatingBubbleModule extends ReactContextBaseJavaModule {
       action.setIcon(R.drawable.copy_icon);
       action.setTitle(title + ": " + value);
       action.setVisibility(View.GONE);
+      action.setSize(FloatingActionButton.SIZE_MINI);
 
       button.addButton(action);
 
