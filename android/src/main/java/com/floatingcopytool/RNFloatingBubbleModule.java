@@ -121,8 +121,10 @@ public class RNFloatingBubbleModule extends ReactContextBaseJavaModule {
       final String title = item.getString("title");
       final String value = item.getString("value");
       if(item.hasKey("color")){
-        final int colorHEX = Color.parseColor(item.getString("color"));
+        int colorHEX = Color.parseColor(item.getString("color"));
+        int colorHEXPressed = darker(colorHEX, 0.9f);
         action.setColorNormal(colorHEX);
+        action.setColorPressed(colorHEXPressed);
       }
       action.setOnClickListener(new View.OnClickListener() {
         public void onClick(View v) {
@@ -151,8 +153,10 @@ public class RNFloatingBubbleModule extends ReactContextBaseJavaModule {
     });
     final String mainTitle = titleData.getString("title");
     if(titleData.hasKey("color")){
-      final int colorHEX = Color.parseColor(titleData.getString("color"));
+      int colorHEX = Color.parseColor(titleData.getString("color"));
+      int colorHEXPressed = darker(colorHEX, 0.9f);
       action.setColorNormal(colorHEX);
+      action.setColorPressed(colorHEXPressed);
     }
     action.setTitle(mainTitle);
     action.setIcon(R.drawable.baseline_close_white_24);
@@ -197,6 +201,18 @@ public class RNFloatingBubbleModule extends ReactContextBaseJavaModule {
       return Settings.canDrawOverlays(reactContext);
     }
     return true;
+  }
+
+  public static int darker (int color, float factor) {
+      int a = Color.alpha( color );
+      int r = Color.red( color );
+      int g = Color.green( color );
+      int b = Color.blue( color );
+
+      return Color.argb( a,
+              Math.max( (int)(r * factor), 0 ),
+              Math.max( (int)(g * factor), 0 ),
+              Math.max( (int)(b * factor), 0 ) );
   }
 
   public void removeBubble() {
