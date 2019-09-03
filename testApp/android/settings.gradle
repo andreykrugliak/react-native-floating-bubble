@@ -1,5 +1,0 @@
-rootProject.name = 'testApp'
-include ':react-native-floating-bubble'
-project(':react-native-floating-bubble').projectDir = new File(rootProject.projectDir, '../../library/android')
-
-include ':app'
