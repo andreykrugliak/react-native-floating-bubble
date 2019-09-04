@@ -134,6 +134,7 @@ public class RNFloatingBubbleModule extends ReactContextBaseJavaModule {
       action.setIcon(R.drawable.copy_icon);
       action.setTitle(title + ": " + value);
       action.setVisibility(View.GONE);
+      action.setSize(FloatingActionButton.SIZE_MINI);
 
       button.addButton(action);
 
@@ -162,6 +163,7 @@ public class RNFloatingBubbleModule extends ReactContextBaseJavaModule {
     action.setIcon(R.drawable.baseline_close_white_24);
     action.setVisibility(View.GONE);
     button.addButton(action);
+    action.setSize(FloatingActionButton.SIZE_MINI);
 
     bubbleView.setOnBubbleRemoveListener(new BubbleLayout.OnBubbleRemoveListener() {
       @Override
@@ -185,6 +187,8 @@ public class RNFloatingBubbleModule extends ReactContextBaseJavaModule {
         }
         button.toggle();
         sendEvent("floating-bubble-press");
+        bubbleView.updateSize();
+        bubbleView.goToWall();
       }
     });
     bubbleView.setShouldStickToWall(true);
