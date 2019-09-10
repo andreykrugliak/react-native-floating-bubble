@@ -112,7 +112,7 @@ public class RNFloatingBubbleModule extends ReactContextBaseJavaModule {
   private void addNewBubble(ReadableMap titleData, ReadableArray data) {
     this.removeBubble();
     bubbleView = (BubbleLayout) LayoutInflater.from(reactContext).inflate(R.layout.bubble_layout, null);
-    final FloatingActionsMenu button = bubbleView.findViewById(R.id.multiple_actions);
+    final FloatingActionsMenu button = (FloatingActionsMenu) bubbleView.findViewById(R.id.multiple_actions);
 
 
     for (int i = 0; i <  data.size(); i++) {
@@ -133,7 +133,6 @@ public class RNFloatingBubbleModule extends ReactContextBaseJavaModule {
       });
       action.setIcon(R.drawable.copy_icon);
       action.setTitle(title + ": " + value);
-      action.setVisibility(View.VISIBLE);
       action.setSize(FloatingActionButton.SIZE_MINI);
 
       button.addButton(action);
@@ -161,7 +160,6 @@ public class RNFloatingBubbleModule extends ReactContextBaseJavaModule {
     }
     action.setTitle(mainTitle);
     action.setIcon(R.drawable.baseline_close_white_24);
-    action.setVisibility(View.VISIBLE);
     button.addButton(action);
     action.setSize(FloatingActionButton.SIZE_MINI);
 
@@ -193,6 +191,7 @@ public class RNFloatingBubbleModule extends ReactContextBaseJavaModule {
     });
     bubbleView.setShouldStickToWall(true);
     bubblesManager.addBubble(bubbleView, 50, 50);
+    button.toggle();
   }
 
   public static String getId(View view) {
