@@ -133,7 +133,7 @@ public class RNFloatingBubbleModule extends ReactContextBaseJavaModule {
       });
       action.setIcon(R.drawable.copy_icon);
       action.setTitle(title + ": " + value);
-      action.setVisibility(View.GONE);
+      action.setVisibility(View.VISIBLE);
       action.setSize(FloatingActionButton.SIZE_MINI);
 
       button.addButton(action);
@@ -161,7 +161,7 @@ public class RNFloatingBubbleModule extends ReactContextBaseJavaModule {
     }
     action.setTitle(mainTitle);
     action.setIcon(R.drawable.baseline_close_white_24);
-    action.setVisibility(View.GONE);
+    action.setVisibility(View.VISIBLE);
     button.addButton(action);
     action.setSize(FloatingActionButton.SIZE_MINI);
 
